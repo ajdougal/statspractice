@@ -1,5 +1,6 @@
 import csv
-
+import mysql_statspractice_connector
+import pprint
 
 csv_path = "AustinSol2018-stats.csv"
 
@@ -47,8 +48,14 @@ def fill_in_point_dict(inner_td):
             previous_away = 0
             point_counter = 0
             for event in inner_td[inner_team][inner_game]:
+                if inner_team not in inner_pd:
+                    inner_pd[inner_team] = dict()
+                if inner_game not in inner_pd[inner_team]:
+                    inner_pd[inner_team][inner_game] = dict()
                 if previous_home is not int(event[5]) or previous_away is not int(event[6]):
                     point_counter += 1
+                    if point_counter not in inner_pd[inner_team][inner_game]:
+                        inner_pd[inner_team][inner_game][point_counter] = dict()
                     inner_pd[inner_team][inner_game][point_counter]['raw'] = []
                 inner_pd[inner_team][inner_game][point_counter]['raw'].append(event)
                 previous_home = int(event[5])
@@ -60,7 +67,9 @@ def main():
     team_game_dict = transform_csv_into_dict_ordered_by_team_and_game(csv_path=csv_path)
     point_dict = fill_in_point_dict(team_game_dict)
     meta_point_dict = transform_point_dict_into_point_dict_with_metadata(point_dict)
-    print meta_point_dict
+    mysql_db = mysql_statspractice_connector.get_mysql_db_connector()
+    print mysql_db
+    pprint.pprint(meta_point_dict, depth=4)
 
 
 # This method takes in a game_dict produced by "transform_csv_into_dict_ordered_by_game(csv_path)" and
