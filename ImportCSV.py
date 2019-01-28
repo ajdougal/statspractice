@@ -1,5 +1,6 @@
 import csv
 import pprint
+import turnover_distribution_report
 
 row_dictionary = []
 team_enum = set()
@@ -54,6 +55,8 @@ def fill_in_point_dict(inner_td, inner_pd):
 
 
 point_dict = fill_in_point_dict(team_dict, point_dict)
+function_file_path = "/Users/adougal/Documents/turnover_distribution_report.csv"
+turnover_distribution_report.function_in_other_file(file_path=function_file_path, point_dict=point_dict)
 
 
 def tally_turnovers_for_game(inner_game):
